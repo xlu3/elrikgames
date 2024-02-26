@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+
+    <title>Elrik's Games</title>
+
+    <style>
+
+        .viewCount {
+            color: rgb(242, 227, 242);
+            font-size: 2.5vw;
+            border: 0.39vw solid black;
+            background-color: rgb(41,41,41);
+            border-radius:5vw;
+
+            padding-left: 1.2vw;
+            padding-right: 1.2vw;
+            
+        }
+
+        div {
+            color: white;
+        }
+
+        .topBar {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            text-align: center;
+            font-size: 100px;
+            color: #d6d6d6;
+        }
+        
+        .gameText {
+            font-size: 2vw;
+            border: 10px solid black;
+            background-color: rgb(41, 41, 41);
+            width: 47vw;
+            text-align: center;
+            
+        }
+        .description {
+            color: rgba(178,178,178,1);
+        }
+        .head {
+            font-size: 70px;
+            font-style: italic;
+        }
+        .gameTable {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        td {
+            padding: 2vw;
+            
+        }
+        .page {
+            background-color: rgba(20,20,20,1);
+        }
+        .head {
+            color: grey;
+        }
+        .gameImage {
+            border: 10px solid rgb(92, 92, 92);
+            border-radius: 100px;
+            width: 20vw;
+            transition: all 1s;
+            cursor: none;
+            
+        }
+        a:hover .gameImage {
+            border: 10px solid rgb(225, 225, 225);
+            border-radius: 50px;
+            transition: all 1s;
+            
+        }
+        
+        p {
+            color: white;
+        }
+        a:hover {
+            color: rgb(161, 161, 255);
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a {
+            background-color: transparent;
+            text-decoration: none;
+            color: rgb(219, 219, 219);
+        }
+        .githubLinkParent {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .githubLink {
+            width: 50px;
+            border: 5px solid white;
+            background-color: rgb(238, 238, 238);
+            border-radius: 25px;
+            
+
+        }
+        .githubLinkText {
+            color: rgba(20,20,20,1);
+            font-size: 35px;
+            transition: color 1s;
+            padding-left: 10px;
+            
+        }
+        a:hover .githubLinkText{
+            color: white;
+            transition: color 1s;
+        }
+        a:hover .githubLink {
+            border: 5px solid rgb(255, 172, 254);
+            border-radius: 25px;
+            transition: all 1s;
+            
+        }
+        #glow {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            box-shadow:
+                0 0 60px 10px rgb(255, 255, 255),  /* inner white */
+                0 0 100px 20px rgb(106, 6, 106), /* middle magenta */
+                0 0 140px 30px #0ff; /*outer cyan */
+
+            pointer-events: none;
+            z-index: 1000;  
+        }
+
+        .hideCursor {
+            cursor: none;
+        }
+    </style>
+    <script>
+        
+
+
+
+        
+        window.onmousemove = e =>   {
+
+            const glow = document.getElementById("glow");
+
+            const x = e.clientX-10;
+            const y = e.clientY-10;
+
+            glow.style.left = x+'px';
+            glow.style.top = y+'px';
+        }
+
+        window.onload = e => {
+            getClicks("grapplyBird","grapplyBirdCount");
+            getClicks("gunSlap","gunSlapCount");
+            getClicks("grapplingHook","grapplingHookCount");
+            getClicks("snakeFlyer","snakeFlyerCount");
+            getClicks("demonPark","demonParkCount");
+        }
+
+        async function getClicks(name,id) {
+            console.log("now");
+
+            const data = await fetch("/stats" + "?" + "name="+name, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+
+            const resData = await data.json();
+
+            console.log(resData);
+
+            if (resData) {
+                document.getElementById(id).textContent = resData['clicks'] + " clicks";
+            }
+            
+
+        };
+
+        async function addClick(game,id) {
+            const data = await fetch("/stats", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({type:game})
+
+            });
+
+            const resData = await data.json();
+
+            console.log(resData);
+            document.getElementById(id).textContent = resData['clicks'] + " clicks";
+
+        };
+
+        
+    </script>
+</head>
+<body class = "page hideCursor">
+    
+        <a href = "https://github.com/elrik970" target = "_blank">
+            <!-- Github Link -->
+            <div class = "githubLinkParent">
+                <img src = "images/GithubPNGImage.png" alt = "GithubLink" class = "githubLink" >
+                <span class = "githubLinkText">Github Link</span>
+            </div>
+        </a>
+    <div id = "glow"></div>
+    <h1 class = "topBar">Elrik's Games</h1>
+    <table class = "gameTable">
+        <tr>
+          <th class = "head">Game Link</th>
+          <th class = "head">Description</th>
+        </tr>
+
+        <tr>
+            <td>
+                <a href = "https://elrik970.github.io/GrapplyBird" target = "_blank">
+                    <img src="images/GrapplyBird.png" alt="GrapplyBird" id = "grapplyBird" class = "gameImage" onclick="addClick('grapplyBird','grapplyBirdCount')">
+                </a>
+                
+            </td>
+            <td class = "gameText">
+                <div class = "description">An epic neon platformer where you have to grapple your way out of a volcano!</div>
+            </td>
+            <td>
+                <div id="grapplyBirdCount" class = "viewCount"> 0 Clicks  </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a href = "https://snakey28.itch.io/gun-slap" target = "_blank">
+                    <img src="images/GunSlap.png" alt="GUNSLAP" class = "gunSlap gameImage" onclick="addClick('gunSlap','gunSlapCount')">
+                </a>
+            </td>
+            <td class = "gameText">
+                <div class = "description">Roguelike where you fight enemies with different guns and upgrades!</div>
+            </td>
+
+            <td>
+                <div id="gunSlapCount" class = "viewCount"> 0 Clicks  </div>
+            </td>
+        </tr>
+
+        
+
+        <tr>
+            <td>
+                <a href = "https://elrik970.github.io/GrapplingHook" target = "_blank">
+                    <img src="images/GrapplingHook.png" alt="Grappling Square" class = "grapplingSquare gameImage" onclick="addClick('grapplingHook','grapplingHookCount')">
+                </a>
+            </td>
+            <td class = "gameText">
+                <div class = "description">A platformer where you have to use your grappling hook to swing to the end!</div>
+            </td>
+
+            <td>
+                <div id="grapplingHookCount" class = "viewCount"> 0 Clicks  </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a href = "https://elrik970.github.io/SnakeFlyer0.1" target = "_blank">
+                    <img src="images/SnakeFlyer.png" alt="Snake Flyer" class = "snakeFlyer gameImage" onclick="addClick('snakeFlyer','snakeFlyerCount')">
+                </a>
+            </td>
+            <td class = "gameText">
+                <div class = "description">A 3d game where you have to repeatedly platform through an obstacle course while avoiding your own trail!</div>
+            </td>
+
+            <td>
+                <div id="snakeFlyerCount" class = "viewCount"> 0 Clicks  </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a href = "https://elrik970.github.io/DemonPark" target = "_blank">
+                    <img src="images/DemonPark.png" alt="Demon Park" class = "demonPark gameImage" onclick="addClick('demonPark','demonParkCount')">
+                </a>
+            </td>
+            <td class = "gameText">
+                <div class = "description">A fun game where you have to place down roads and roller coasters to get as much money as possible!</div>
+            </td>
+
+            <td>
+                <div id="demonParkCount" class = "viewCount"> 0 Clicks  </div>
+            </td>
+        </tr>
+
+      </table>
+</body>
+</html>
