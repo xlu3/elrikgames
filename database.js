@@ -6,10 +6,10 @@ env.config();
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_ADDON_HOST || '',
-    user: 'umkp1ej4rddbrvbz',
-    password: '8fMjLu5170Jt3kCkUlSQ',
-    database: 'biwalvu9dunjwhzi0pew',
-    port: '3306'
+    user: process.env.MYSQL_ADDON_USER || '',
+    password: process.env.MYSQL_ADDON_PASSWORD || '',
+    database: process.env.MYSQL_ADDON_DB || '',
+    port: process.env.MYSQL_ADDON_PORT || '8080'
 }).promise();
 
 export async function getStats(name) {
