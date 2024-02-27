@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "engines": {
+    "npm": "10.2.4",
+    "node": "20.11.1"
+  },
   "type": "module",
   "author": "",
   "license": "ISC",

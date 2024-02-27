@@ -19,7 +19,7 @@ export async function getStats(name) {
     return rows[0];
 }
 
-getStats('grabblyBird', 'views');
+// getStats('grabblyBird', 'views');
 
 export async function insertRow(name, views, likes) {
     // INSERT INTO `stats` (`name`, `views`, `likes`) VALUES ('grapplyBird', '0', '0');
