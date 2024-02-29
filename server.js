@@ -7,26 +7,32 @@ import Datastore from 'nedb';
 //const env = require("dotenv").config();
 import env from 'dotenv';
 //const env = require("dotenv").config();
-
 import {getStats, insertRow, updateRow} from './database.js';
+//import firebaseConfig from "./firebase/firebaseConfig.js";
+import * as path from 'path';
 
 env.config();
-
 const app = express();
-
 app.use(express.static('public'));
-const jsonParser = bodyParser.json();
 
-// const port = 3000;
+const database = new Datastore("database.db");
+  
+const jsonParser = bodyParser.json();
 const port = process.env.PORT || 3000;
 
 const server = app.listen(port);
 
-const database = new Datastore("database.db");
 database.loadDatabase();
 
+// app.get('/', (req, response) => {
+//     console.log("xlu", `#{publicPath}/index.html`);
+//     response.sendFile(__dirname + `/public/index.html`); // images not working
+// });
 
-
+// app.get('/public/firebase/firebaseConfig.js', (req, response) => {
+//     console.log("xlu2", `#{publicPath}/index.html`);
+//     response.sendFile(__dirname + `/public/firebase/firebaseConfig.js`); // images not working
+// });
 
 app.get("/stats", async (request, response) => {
 
@@ -41,24 +47,7 @@ app.get("/stats", async (request, response) => {
         const output = {name: results.name, clicks: results.views};
         console.log("output:", output);
         response.json(output);
-    }
-
-    /*
-    database.findOne({ 'name' : gameType}, function(err, doc) {
-
-
-        if (err) {
-            console.log(err);
-            return;
-        }
-        
-        console.log(doc);
-
-        response.json(doc);
-
-    });
-    */
-    
+    } 
 });
 
 app.put("/stats", jsonParser, async (request, response) => {
@@ -83,56 +72,9 @@ app.put("/stats", jsonParser, async (request, response) => {
         insertRow(gameType, 1, 0);
         response.json(returnValue)
     }
-
-    // database.findOne({ 'name': gameType}, function(err, doc) {
-
-
-    //     if (err) {
-    //         console.log(err);
-    //         return;
-    //     }
-        
-    //     console.log(doc);
-
-    //     if (doc) {
-    //         console.log("add 1 to " + gameType);
-
-    //         const returnValue = doc;
-
-
-            
-
-    //         returnValue['clicks'] += 1;
-
-    //         console.log(returnValue['clicks']);
-
-    //         const id  = returnValue['_id'];
-
-    //         database.update(
-    //             {'_id': id}, 
-    //             { $set: { 'clicks': returnValue['clicks']} },
-    //             {},// this argument was missing
-    //             function (err, numReplaced) {
-    //                 console.log("replaced---->" + numReplaced);
-    //             }
-    //         );
-
-    //         database.loadDatabase();
-
-    //         response.json(returnValue);
-
-    //     }
-    //     else {
-    //         const returnValue = {};
-
-    //         returnValue['name'] = gameType;
-    //         returnValue['clicks'] = 1;
-
-    //         database.insert(returnValue);
-
-    //         database.loadDatabase();
-
-    //         response.json(returnValue)
-    //     }
-    // });
 });
+
+// app.get("/firebase/firebaseConfig", (request, response) => {
+//     console.log("in firebase get");
+//     response.sendFile(firebaseConfig);
+// });

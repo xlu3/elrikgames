@@ -21,9 +21,32 @@
             padding-right: 1.2vw;
             
         }
+        .login-logout {
+            display: flex;
+            float: right;
+            flex-direction: column;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        #username {
+            float: right;
+            color: rgb(242, 227, 242);
+            font-size: 2.5vw;
+        }
+        #signin, #signout {
+            float: right;
+            color: rgb(104, 85, 224);
+            background-color: rgba(255, 255, 255, 1);
+            border: 5px solid rgba(104, 85, 224, 1);
+            box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+        }
 
         div {
             color: white;
+        }
+        .hide {
+            display: none;
         }
 
         .topBar {
@@ -140,11 +163,6 @@
         }
     </style>
     <script>
-        
-
-
-
-        
         window.onmousemove = e =>   {
 
             const glow = document.getElementById("glow");
@@ -162,6 +180,17 @@
             getClicks("grapplingHook","grapplingHookCount");
             getClicks("snakeFlyer","snakeFlyerCount");
             getClicks("demonPark","demonParkCount");
+
+            let username = localStorage.getItem("username");
+            if (username && username.trim() !="") {
+                $("#signin").hide();
+                 $("#signout").show();
+                $("#username").html(username);
+            } else {
+                $("#signin").show();
+                $("#signout").hide();
+                $("#username").hide();
+            }
         }
 
         async function getClicks(name,id) {
@@ -202,20 +231,24 @@
             document.getElementById(id).textContent = resData['clicks'] + " clicks";
 
         };
-
-        
     </script>
 </head>
 <body class = "page hideCursor">
-    
-        <a href = "https://github.com/elrik970" target = "_blank">
-            <!-- Github Link -->
-            <div class = "githubLinkParent">
-                <img src = "images/GithubPNGImage.png" alt = "GithubLink" class = "githubLink" >
-                <span class = "githubLinkText">Github Link</span>
-            </div>
-        </a>
+    <a href = "https://github.com/elrik970" target = "_blank">
+        <!-- Github Link -->
+        <div class = "githubLinkParent">
+            <img src = "images/GithubPNGImage.png" alt = "GithubLink" class = "githubLink" >
+            <span class = "githubLinkText">Github Link</span>
+        </div>
+    </a>
     <div id = "glow"></div>
+    <div class="login-logout">
+        <button class="viewCount" id="signin">Login</button>
+
+        <span id="username"></span>
+        <button class="viewCount hide" id="signout">Logout</button>
+    </div>
+    
     <h1 class = "topBar">Elrik's Games</h1>
     <table class = "gameTable">
         <tr>
@@ -302,4 +335,8 @@
 
       </table>
 </body>
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script type="module" src="./firebase/google-signin.js"></script>
 </html>
