@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+    <title>Elrik's Games</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script>
+        window.onmousemove = e =>   {
+            const glow = document.getElementById("glow");
+            const x = e.clientX-10;
+            const y = e.clientY-10;
+            glow.style.left = x+'px';
+            glow.style.top = y+'px';
+        }
+
+        window.onload = e => {
+            getClicks("grapplyBird","grapplyBirdCount");
+            getClicks("gunSlap","gunSlapCount");
+            getClicks("grapplingHook","grapplingHookCount");
+            getClicks("snakeFlyer","snakeFlyerCount");
+            getClicks("demonPark","demonParkCount");
+
+            let username = localStorage.getItem("username");
+            if (username && username.trim() !="") {
+                $("#signin").hide();
+                 $("#signout").show();
+                $("#username").html(username);
+            } else {
+                $("#signin").show();
+                $("#signout").hide();
+                $("#username").hide();
+            }
+        }
+
+        async function getClicks(name,id) {
+            console.log("now");
+
+            const data = await fetch("/stats" + "?" + "name="+name, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+
+            const resData = await data.json();
+
+            console.log(resData);
+
+            if (resData) {
+                document.getElementById(id).textContent = resData['clicks'] + " clicks";
+            }
+        };
+
+        async function addClick(game,id) {
+            const data = await fetch("/stats", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({type:game})
+
+            });
+
+            const resData = await data.json();
+
+            console.log(resData);
+            document.getElementById(id).textContent = resData['clicks'] + " clicks";
+
+        };
+    </script>
+</head>
+
+<body class="page hideCursor">
+    <nav>
+      <h1>
+        <div style="display: flex; flex-direction: row">
+            <a class = "topBar" href="/">Elrik's Games</a>
+            <a href = "https://github.com/elrik970" target = "_blank">
+                <!-- Github Link -->
+                <div class = "githubLinkParent">
+                    <img src = "images/GithubPNGImage.png" alt = "GithubLink" class = "githubLink" >
+                    <span class = "githubLinkText">Github Link</span>
+                </div>
+            </a>
+        </div>
+     </h1>
+      <ul>
+        <% 
+        var user = null;
+        if (user) { %>
+          <li>Welcome, <%= user.email %></li>
+          <li><a href="/logout">Log out</a></li>
+        <% } else { %>
+          <li><a href="/login">Log in</a></li>
+          <li><a href="/signup" class="btn">Sign up</a></li>
+        <% } %>
+      </ul>
+    </nav>
