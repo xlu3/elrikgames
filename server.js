@@ -1,38 +1,30 @@
-// const express = require("express");
-import express from 'express';
-//const bodyParser = require("body-parser");
-import bodyParser from 'body-parser';
-// const Datastore = require("nedb");
-import Datastore from 'nedb';
-//const env = require("dotenv").config();
-import env from 'dotenv';
-//const env = require("dotenv").config();
-import {getStats, insertRow, updateRow} from './database.js';
+const express = require("express");
+//import express from 'express';
+const bodyParser = require("body-parser");
+//import bodyParser from 'body-parser';
+const Datastore = require("nedb");
+//import Datastore from 'nedb';
+const env = require("dotenv");
+env.config();
+//import env from 'dotenv';
+// import {getStats, insertRow, updateRow} from './database.js';
+const db = require('./database.js');
 //import firebaseConfig from "./firebase/firebaseConfig.js";
-import * as path from 'path';
+//import router from "./routes/routes.js"
+const routes = require('./routes/routes.js');
 
 env.config();
 const app = express();
 app.use(express.static('public'));
 
+// view engine
+app.set('view engine', 'ejs');
+
 const database = new Datastore("database.db");
-  
 const jsonParser = bodyParser.json();
 const port = process.env.PORT || 3000;
-
 const server = app.listen(port);
-
 database.loadDatabase();
-
-// app.get('/', (req, response) => {
-//     console.log("xlu", `#{publicPath}/index.html`);
-//     response.sendFile(__dirname + `/public/index.html`); // images not working
-// });
-
-// app.get('/public/firebase/firebaseConfig.js', (req, response) => {
-//     console.log("xlu2", `#{publicPath}/index.html`);
-//     response.sendFile(__dirname + `/public/firebase/firebaseConfig.js`); // images not working
-// });
 
 app.get("/stats", async (request, response) => {
 
@@ -40,7 +32,7 @@ app.get("/stats", async (request, response) => {
 
     console.log(gameType);
     // const result = await getStats('grapplyBird', 'views');
-    const results = await getStats(gameType, 'views');
+    const results = await db.getStats(gameType, 'views');
     console.log('db result: ', results);
     // todo put all in try catch block
     if (results) {
@@ -57,14 +49,14 @@ app.put("/stats", jsonParser, async (request, response) => {
     console.log(gameType);
 
     // 
-    const results = await getStats(gameType, 'views');
+    const results = await db.getStats(gameType, 'views');
     console.log('db result: ', results);
     // todo put all in try catch block
     if (results) {
         const output = {name: results.name, clicks: results.views + 1};
         // console.log("output:", output);
         const views = results.views + 1;
-        updateRow(gameType, views, 0);
+        db.updateRow(gameType, views, 0);
 
         response.json(output);
     } else {
@@ -74,7 +66,4 @@ app.put("/stats", jsonParser, async (request, response) => {
     }
 });
 
-// app.get("/firebase/firebaseConfig", (request, response) => {
-//     console.log("in firebase get");
-//     response.sendFile(firebaseConfig);
-// });
+app.use(routes);
