@@ -10,6 +10,27 @@ const pool = mysql.createPool({
     port: process.env.MYSQL_ADDON_PORT || '8080'
 }).promise();
 
+module.exports.getUser = async function (email) {
+    console.log("in getUser: ", email);
+    const [rows] = await pool.query('select * from users where email = ?', email);
+    console.log(" I am here", email, rows[0]);
+    return rows[0];
+}
+
+module.exports.createUser = async function (email, password) {
+    console.log("in createUser, ", email, password);
+    const result = await pool.query(`insert into users  (email, password) VALUES (?,  ? )`, [email, password]);
+    console.log(result);
+    return result;
+}
+
+module.exports.findUser = async function (email) {
+    const [rows] = await pool.query('select * from users where email = ?', email);
+    console.log(rows);
+    console.log(" findUser, find user", email, rows[0]);
+    return rows[0];
+}
+
 module.exports.getStats = async function (name) {
     console.log("in getStats: ", name);
     const [rows] = await pool.query('select * from stats where name = ?', name);

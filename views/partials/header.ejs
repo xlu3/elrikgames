@@ -6,13 +6,18 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.png">
     <title>Elrik's Games</title>
     <link rel="stylesheet" href="./styles.css">
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         window.onmousemove = e =>   {
             const glow = document.getElementById("glow");
             const x = e.clientX-10;
             const y = e.clientY-10;
-            glow.style.left = x+'px';
-            glow.style.top = y+'px';
+            if (glow) {
+                glow.style.left = x+'px';
+                glow.style.top = y+'px';
+            }
+            
         }
 
         window.onload = e => {
@@ -50,7 +55,7 @@
             console.log(resData);
 
             if (resData) {
-                document.getElementById(id).textContent = resData['clicks'] + " clicks";
+                $("#" + id).text(resData['clicks'] + " clicks");
             }
         };
 
@@ -89,7 +94,7 @@
      </h1>
       <ul>
         <% 
-        var user = null;
+        console.log("xlu....., ", user);
         if (user) { %>
           <li>Welcome, <%= user.email %></li>
           <li><a href="/logout">Log out</a></li>
