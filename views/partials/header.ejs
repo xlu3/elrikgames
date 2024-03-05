@@ -20,12 +20,12 @@
             
         }
 
-        window.onload = e => {
-            getClicks("grapplyBird","grapplyBirdCount");
-            getClicks("gunSlap","gunSlapCount");
-            getClicks("grapplingHook","grapplingHookCount");
-            getClicks("snakeFlyer","snakeFlyerCount");
-            getClicks("demonPark","demonParkCount");
+        window.onload = async (e) => {
+            await getClicks("grapplyBird","grapplyBirdCount");
+            await getClicks("gunSlap","gunSlapCount");
+            await getClicks("grapplingHook","grapplingHookCount");
+            await getClicks("snakeFlyer","snakeFlyerCount");
+            await getClicks("demonPark","demonParkCount");
 
             let username = localStorage.getItem("username");
             if (username && username.trim() !="") {

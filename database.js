@@ -10,6 +10,7 @@ const pool = mysql.createPool({
     port: process.env.MYSQL_ADDON_PORT || '8080'
 }).promise();
 
+
 module.exports.getUser = async function (email) {
     console.log("in getUser: ", email);
     const [rows] = await pool.query('select * from users where email = ?', email);
@@ -25,6 +26,7 @@ module.exports.createUser = async function (email, password) {
 }
 
 module.exports.findUser = async function (email) {
+    
     const [rows] = await pool.query('select * from users where email = ?', email);
     console.log(rows);
     console.log(" findUser, find user", email, rows[0]);
