@@ -1,0 +1,51 @@
+<%- include('./partials/header'); -%>
+<div id = "glow"></div>
+<form id="loginForm" action="/login">
+    <div id="login-error" class="errors"></div>
+    <h2>Login</h2>
+    <label for="email">Email</label>
+    <input type="text" name="email" required />
+    <label for="password">Password</label>
+    <input type="password" name="password" required />
+    <div style="margin-top: 10px; float: right;">
+        <a style="color: blue; text-decoration: underline;" href="/forgetpassword">Forgot password?</a>
+    </div>
+    <button>Log In</button>
+  </form>
+  
+<script>
+    const form = $('#loginForm');
+    const loginError = document.querySelector('#login-error');
+
+    form.on('submit', async (e) => {
+    e.preventDefault();
+
+    // reset errors
+    loginError.textContent = '';
+
+    // get values
+    const email = form[0].email.value;
+    const password = form[0].password.value;
+
+    try {
+        const res = await fetch('/login', { 
+        method: 'POST', 
+        body: JSON.stringify({ email, password }),
+        headers: {'Content-Type': 'application/json'}
+        });
+        const data = await res.json();
+        console.log("login result is *************", data);
+        if (data == {} || data.errors) {
+            loginError.textContent = data.errors;
+        }
+        else {
+            location.assign('/');
+        }
+    }
+    catch (err) {
+        console.log("xlu ****************** error out", err);
+    }
+    });
+</script>
+
+<%- include('./partials/footer'); -%>
