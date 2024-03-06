@@ -42,13 +42,13 @@ module.exports.signup_post = async (req, res) => {
             from: "Elrik",
             to: email, // receiver email
             subject: "Elrik Games Sign Up!",
-            text: "Thank you for signing up to Elrik's Games",
-            html: "<b>Thank you for signing up to Elrik's Games</b>"
+            text: "Thank you for signing up to Elrik's Games: https://elrikgames1.uc.r.appspot.com/",
+            html: "<b>Thank you for signing up to Elrik's Games: <a href='https://www.w3schools.com'>https://elrikgames1.uc.r.appspot.com</a></b>"
         }
         transporter.sendMail(message).then(() => {
             res.status(201).json({msg: "sucessfully send the msg"});
         }).catch(error => {
-            res.status(500).json(error); // xxx
+            res.status(500).json(error); 
         });
         
       }
