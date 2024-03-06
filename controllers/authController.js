@@ -3,12 +3,21 @@ const mailer = require("nodemailer");
 
 const User = require('../models/User.js');
 // controller actions
-module.exports.signup_get = (req, res) => {
+signup_get = (req, res) => {
     res.render('signup');
 }
-module.exports.login_get = (req, res) => {
+login_get = (req, res) => {
     res.render('login');
 }
+
+forgetpassword_get = (req, res) => {
+    res.render('forgetpassword');
+}
+
+resetpassword_get = (req, res) => {
+    res.render('resetpassword');
+}
+
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -16,7 +25,7 @@ const createToken = (id) => {
     });
   };
 
-module.exports.signup_post = async (req, res) => {
+signup_post = async (req, res) => {
     console.log("xlu post, req.query", req.body);
     //res.send('new signup');
     let email = req.body.email;
@@ -28,16 +37,7 @@ module.exports.signup_post = async (req, res) => {
         const user = await User.createUser(email, password);
         const token = createToken(email);
         res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        // send email
-        let transporter = mailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.GOOGLE_APP_USER,
-                pass: process.env.GOOGLE_APP_PASSWORD
-            }
-        });
+
         let message = {
             from: "Elrik",
             to: email, // receiver email
@@ -45,12 +45,7 @@ module.exports.signup_post = async (req, res) => {
             text: "Thank you for signing up to Elrik's Games: https://elrikgames1.uc.r.appspot.com/",
             html: "<b>Thank you for signing up to Elrik's Games: <a href='https://www.w3schools.com'>https://elrikgames1.uc.r.appspot.com</a></b>"
         }
-        transporter.sendMail(message).then(() => {
-            res.status(201).json({msg: "sucessfully send the msg"});
-        }).catch(error => {
-            res.status(500).json(error); 
-        });
-        
+        sendEmail(message, "successfully send the sign in email", res);
       }
     catch(err) {
         //const errors = handleErrors(err);
@@ -59,13 +54,12 @@ module.exports.signup_post = async (req, res) => {
     }
 }
 
-module.exports.login_post = async (req, res) => {
+login_post = async (req, res) => {
     console.log("xlu post, req.query", req.body);
     //res.send('new signup');
     let email = req.body.email;
     let password = req.body.password;
     console.log("in controller login_post, email, password, ", email, password);
-    //res.status(201);
     try {
 
         const user = await User.findUser(email, password);
@@ -77,7 +71,7 @@ module.exports.login_post = async (req, res) => {
             const token = createToken(email);
             res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-            res.status(201).json({ });
+            res.status(201).json({success: "You have successfully login" });
         } else {
             throw new Error("Please check your email and password.")
         }
@@ -89,7 +83,104 @@ module.exports.login_post = async (req, res) => {
     }
 }
 
-module.exports.logout_get = (req, res) => {
+logout_get = (req, res) => {
     res.cookie('user', '', { maxAge: 1 });
     res.redirect('/');
 }
+
+forgetpassword_post = async (req, res) => {
+    console.log("xlu post, req.query", req.body);
+    //res.send('new signup');
+    let email = req.body.email;
+    console.log("in controller, email, password, ", email);
+    console.log("post");
+    //res.status(201);
+    try {
+        const user = await User.findUserByEmail(email);
+        if (user) {
+            console.log("*******forgetpassword, user is: ", user);
+            const code = Math.floor(Math.random() * 10000);
+            await User.updateUserCode(email, code);
+            // const token = createToken(email);
+            //res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
+
+            let message = {
+                from: "Elrik",
+                to: email, // receiver email
+                subject: "Elrik Games Password Reset",
+                text: `Your verification code is ${code}. Please use link to reset your password: https://elrikgames1.uc.r.appspot.com/resetpassword?code=${code}&email=${email}`,
+                html: `<b>Your verification code is ${code}. Please use link to reset your password: <a href="https://elrikgames1.uc.r.appspot.com/resetpassword?code=${code}&email=${email}">https://elrikgames1.uc.r.appspot.com/resetpassword?code=${code}&email=${email}</a></b>`
+            }
+            sendEmail(message, "successfully send the password reset email", res);
+        } else {
+            throw new Error("Please use your sign up email to reset your password");
+        }
+      }
+    catch(err) {
+        //const errors = handleErrors(err);
+        console.log("xlu controller ", err);
+        res.status(400).json({ errors: err.message });
+    }
+}
+
+sendEmail = (content, rspMsg, res) => {
+    let transporter = mailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.GOOGLE_APP_USER,
+            pass: process.env.GOOGLE_APP_PASSWORD
+        }
+    });
+
+    transporter.sendMail(content).then(() => {
+        res.status(201).json({msg: rspMsg});
+    }).catch(error => {
+        res.status(500).json(error); 
+    });
+}
+resetpassword_post = async (req, res) => {
+    console.log("xlu resetpassword_post, req.query", req.body);
+    //res.send('new signup');
+    let email = req.body.email;
+    let password = req.body.password;
+    let code = req.body.code;
+    console.log("in controller, email, password, ", email);
+    console.log("post");
+    //res.status(201);
+    try {
+        const user = await User.findUserByEmail(email);
+        console.log("******user.code, code: ", user, user.code, code);
+        if (user && user.code == code) {
+            console.log("*******resetpassword, user is: ", user);
+            const result = await User.resetUserPassword(email, password, code);
+            if (result) {
+                const token = createToken(email);
+                res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
+                res.status(201).json({ success: "You have successfully reset your password" });
+            } else {
+                throw new Error("Failed to reset your password. Perhaps the link you use to reset password has been expired or used. Please reset your password again.");
+            }
+        } else {
+            throw new Error("Failed to reset your password. Perhaps the link you use to reset password has been expired or used. Please reset your password again.");
+        }
+      }
+    catch(err) {
+        //const errors = handleErrors(err);
+        console.log("xlu controller ", err);
+        res.status(400).json({ errors: err.message });
+    }
+}
+
+module.exports = {
+    signup_get, 
+    signup_post, 
+    login_get, 
+    login_post, 
+    logout_get,
+    forgetpassword_get,
+    forgetpassword_post,
+    resetpassword_get,
+    resetpassword_post
+};

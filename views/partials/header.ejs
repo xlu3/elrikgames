@@ -83,7 +83,7 @@
       <h1>
         <div style="display: flex; flex-direction: row">
             <a class = "topBar" href="/">Elrik's Games</a>
-            <a href = "https://github.com/elrik970" target = "_blank">
+            <a style="display: none" href = "https://github.com/elrik970" target = "_blank">
                 <!-- Github Link -->
                 <div class = "githubLinkParent">
                     <img src = "images/GithubPNGImage.png" alt = "GithubLink" class = "githubLink" >
@@ -94,7 +94,7 @@
      </h1>
       <ul>
         <% 
-        console.log("xlu....., ", user);
+        // console.log("xlu....., ", user);
         if (user) { %>
           <li>Welcome, <%= user.email %></li>
           <li><a href="/logout">Log out</a></li>

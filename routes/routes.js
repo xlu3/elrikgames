@@ -9,15 +9,17 @@ router.get('/signup', authController.signup_get);
 router.post('/signup', authController.signup_post);
 router.get('/login', authController.login_get);
 router.post('/login', authController.login_post);
+router.get('/forgetpassword', authController.forgetpassword_get);
+router.post('/forgetpassword', authController.forgetpassword_post);
+router.get('/resetpassword', authController.resetpassword_get);
+router.post('/resetpassword', authController.resetpassword_post);
 router.get('/logout', authController.logout_get);
 
 router.get('/', (req, res) => { 
-    console.log("home================");
     res.render('home');
   });
 
 router.get('/login', (req, res) => {
-    console.log("login================");
     res.render('login');
 });
 
