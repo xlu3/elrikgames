@@ -1,4 +1,7 @@
 const express = require("express");
+const session = require("express-session");
+const flash = require('connect-flash')
+
 const bodyParser = require("body-parser");
 const Datastore = require("nedb");
 const env = require("dotenv");
@@ -14,6 +17,7 @@ env.config();
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true,}))
 app.use(cookieParser());
 
 // view engine
@@ -25,7 +29,23 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port);
 database.loadDatabase();
 
+app.use(session({
+    secret:'flashblog',
+    saveUninitialized: true,
+    resave: true
+}));
+
+app.use(flash()); 
+app.use(function(req, res, next){
+    res.locals.messages = req.flash();
+    // console.log("***********res.locals.messages=", res.locals.messages);
+    next();
+  });
 app.get('*', checkUser);
+
+app.get("/", async (req, res) => {
+    res.render('home');
+});
 
 app.get("/stats", async (request, response) => {
     const gameType = request.query.name;

@@ -1,7 +1,7 @@
 <%- include('./partials/header'); -%>
 <div id = "glow"></div>
 <form id="loginForm" action="/login">
-    <div id="login-error" class="errors"></div>
+    <div id="login-error" class="error"></div>
     <h2>Login</h2>
     <label for="email">Email</label>
     <input type="text" name="email" required />
@@ -37,6 +37,7 @@
         console.log("login result is *************", data);
         if (data == {} || data.errors) {
             loginError.textContent = data.errors;
+            $(".alert-success").html(data.error);
         }
         else {
             location.assign('/');

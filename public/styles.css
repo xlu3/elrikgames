@@ -8,7 +8,6 @@ nav{
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 120px;
   }
 nav ul{
     display: flex;
@@ -25,13 +24,10 @@ nav li a{
     display: block;
     padding: 10px 16px;
     letter-spacing: 2px;
+    color: rgb(219, 219, 219);
+    text-decoration: none;
 }
-.error {
-    color: red;
-}
-.success {
-    color: green;
-}
+
 form h2{
     font-size: 2.4em;
     font-weight: 900;
@@ -120,7 +116,7 @@ div {
     text-align: center;
     font-size: 50px;
     color: #d6d6d6;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .gameText {
@@ -228,4 +224,11 @@ a:hover .githubLink {
 
 .hideCursor {
     cursor: none;
+}
+
+.error {
+    color: red;
+}
+.success {
+    color: green;
 }

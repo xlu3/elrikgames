@@ -20,13 +20,13 @@ database.loadDatabase();
 
 const encryptPassword = async (password) => {
     const pw = await bcrypt.hash(password, 10);
-    console.log(pw);
+    //console.log(pw);
     return pw;
 };
 //const pw = module.exports.encryptPassword("1234");
 createUser = async (email, password) => {
     const pw = await encryptPassword(password);
-    console.log("createUser2, password is: ", pw);
+    //console.log("createUser2, password is: ", pw);
     try {
         const results = await db.createUser(email, pw);
         console.log('db result1: ', results);
@@ -51,14 +51,14 @@ createUser = async (email, password) => {
 
 findUser = async (email, password) => {
     try {
-        console.log("xlu1 findUser ************", email, password);
+        //console.log("xlu1 findUser ************", email, password);
         const user = await db.findUser(email);
         // console.log('****************db result: ', user);
         // todo put all in try catch block
         if (user) {
             // TODO
             const isMatch = await bcrypt.compare(password, user.password);
-            console.log("********************* user.password, password: ", user.password);
+            //console.log("********************* user.password, password: ", user.password);
             if (isMatch) {
                 return true;
             }
@@ -84,7 +84,7 @@ findUserByEmail = async (email) => {
         //console.log('findUserByEmail db result: ', user);
         // todo put all in try catch block
         if (user) {
-            console.log("findUserByEmail, user: ", user)
+           // console.log("findUserByEmail, user: ", user)
            return {email: user.email, code: user.code};
         } 
         else {

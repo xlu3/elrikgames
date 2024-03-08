@@ -19,7 +19,7 @@ getUser = async function (email) {
 }
 
 createUser = async function (email, password) {
-    console.log("in createUser, ", email, password);
+    //console.log("in createUser, ", email, password);
     const result = await pool.query(`insert into users  (email, password) VALUES (?,  ? )`, [email, password]);
     console.log(result);
     return result;
@@ -28,8 +28,8 @@ createUser = async function (email, password) {
 findUser = async function (email) {
     
     const [rows] = await pool.query('select * from users where email = ?', email);
-    console.log(rows);
-    console.log(" findUser, find user", email, rows[0]);
+    //console.log(rows);
+    //console.log(" findUser, find user", email, rows[0]);
     return rows[0];
 }
 

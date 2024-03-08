@@ -20,7 +20,6 @@ const requireAuth = (req, res, next) => {
     }
   };
 
-  // check current user
 const checkUser = (req, res, next) => {
     const token = req.cookies.user;
     
@@ -28,16 +27,16 @@ const checkUser = (req, res, next) => {
         console.log("check user req.cookies, token: ", req.cookies, token);
 
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-            console.log("verify token", decodedToken);
+            //console.log("verify token", decodedToken);
 
             if (err) {
-                console.log("jwt verify failed");
+                //console.log("jwt verify failed");
                 res.locals.user = null;
                 next();
             } else {
                 // let user = await User.findById(decodedToken.id);
                 const user = await User.findUserByEmail(decodedToken.id);
-                console.log("xlu set user in res local, ", user);
+                //console.log("xlu set user in res local, ", user);
                 res.locals.user = user;
                 next();
             }

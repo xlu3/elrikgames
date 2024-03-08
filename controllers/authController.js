@@ -2,6 +2,20 @@ const jwt = require('jsonwebtoken');
 const mailer = require("nodemailer");
 
 const User = require('../models/User.js');
+
+const mysql = require('mysql2');
+const env = require('dotenv');
+
+env.config();
+
+const pool = mysql.createPool({
+    host: process.env.MYSQL_ADDON_HOST || '',
+    user: process.env.MYSQL_ADDON_USER || '',
+    password: process.env.MYSQL_ADDON_PASSWORD || '',
+    database: process.env.MYSQL_ADDON_DB || '',
+    port: process.env.MYSQL_ADDON_PORT || '8080'
+}).promise();
+
 // controller actions
 signup_get = (req, res) => {
     res.render('signup');
@@ -16,6 +30,11 @@ forgetpassword_get = (req, res) => {
 
 resetpassword_get = (req, res) => {
     res.render('resetpassword');
+}
+
+addgames_get = (req, res) => {
+    // console.log("addgames_get, ***********")
+    res.render('addgames');
 }
 
 const maxAge = 3 * 24 * 60 * 60;
@@ -70,7 +89,7 @@ login_post = async (req, res) => {
             //res.cookie('user', email, { httpOnly: true, maxAge: maxAge * 1000 });
             const token = createToken(email);
             res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
-
+            res.locals.messages = { message: "Your have successfully login" };
             res.status(201).json({success: "You have successfully login" });
         } else {
             throw new Error("Please check your email and password.")
@@ -79,6 +98,7 @@ login_post = async (req, res) => {
     catch(err) {
         //const errors = handleErrors(err);
         console.log("xlu controller ", err);
+        // res.locals.messages = { message: err.message };
         res.status(400).json({ errors: err.message });
     }
 }
@@ -173,6 +193,32 @@ resetpassword_post = async (req, res) => {
     }
 }
 
+addgames_post = async (req, res, next) => {
+    console.log("xlu addgames_post, req.query"); //, req.body
+    //res.send('new signup');
+    let name = req.body.name;
+    let description = req.body.description;
+    // let image = req.body.image;
+    let image = req.file.buffer.toString('base64');
+    //console.log("in controller, addgames_post, name, description, image", name, description, image);
+    try {
+        console.log(JSON.stringify(req.file.buffer.toString('base64')));
+        res.locals.result = "You have successfully uploaded a game";
+
+        const result = await pool.query(`insert into games  (name, description, image) VALUES (?, ?, ?)`, [name, description, image]);
+        //console.log("******result: ", result);
+        if (result) {
+            req.flash('success', 'You have successfully added a game');
+            res.redirect('/');
+        } else {
+            throw new Error("Failed to add a game.");
+        }
+      }
+    catch(err) {
+        res.status(400).json({ errors: err.message });
+    }
+}
+
 module.exports = {
     signup_get, 
     signup_post, 
@@ -182,5 +228,7 @@ module.exports = {
     forgetpassword_get,
     forgetpassword_post,
     resetpassword_get,
-    resetpassword_post
+    resetpassword_post,
+    addgames_get,
+    addgames_post
 };
