@@ -30,7 +30,7 @@ const server = app.listen(port);
 database.loadDatabase();
 
 app.use(session({
-    secret:'flashblog',
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     resave: true
 }));
@@ -42,47 +42,5 @@ app.use(function(req, res, next){
     next();
   });
 app.get('*', checkUser);
-
-app.get("/", async (req, res) => {
-    res.render('home');
-});
-
-app.get("/stats", async (request, response) => {
-    const gameType = request.query.name;
-
-    console.log(gameType);
-    // const result = await getStats('grapplyBird', 'views');
-    const results = await db.getStats(gameType, 'views');
-    console.log('db result: ', results);
-    // todo put all in try catch block
-    if (results) {
-        const output = {name: results.name, clicks: results.views};
-        console.log("output:", output);
-        response.json(output);
-    } 
-});
-
-app.put("/stats", async (request, response) => {
-    const gameType = request.body["type"];
-
-    console.log(gameType);
-
-    // 
-    const results = await db.getStats(gameType, 'views');
-    console.log('db result: ', results);
-    // todo put all in try catch block
-    if (results) {
-        const output = {name: results.name, clicks: results.views + 1};
-        // console.log("output:", output);
-        const views = results.views + 1;
-        db.updateRow(gameType, views, 0);
-
-        response.json(output);
-    } else {
-        const output = {name: gameType, clicks: 1};
-        insertRow(gameType, 1, 0);
-        response.json(returnValue)
-    }
-});
 
 app.use(routes);

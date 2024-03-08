@@ -2,6 +2,7 @@
 const { Router } = require('express');
 
 const authController = require('../controllers/authController');
+const gamesController = require('../controllers/gamesController');
 
 const router = Router();
 const multer = require('multer');
@@ -17,12 +18,12 @@ router.get('/resetpassword', authController.resetpassword_get);
 router.post('/resetpassword', authController.resetpassword_post);
 router.get('/logout', authController.logout_get);
 
-router.get('/addgames', authController.addgames_get);
-router.post('/addgames', upload.single('gameimage'), authController.addgames_post);
-
-router.get('/', (req, res) => { 
-    res.render('home');
-  });
+router.get('/', gamesController.games_get);
+router.get('/games', gamesController.games_get);
+router.get('/addgames', gamesController.addgames_get);
+router.post('/addgames', upload.single('gameimage'), gamesController.addgames_post);
+router.put('/gameviews/:id', gamesController.gameviews_put);
+router.delete('/games/:id', gamesController.games_delete);
 
 router.get('/login', (req, res) => {
     res.render('login');

@@ -32,11 +32,6 @@ resetpassword_get = (req, res) => {
     res.render('resetpassword');
 }
 
-addgames_get = (req, res) => {
-    // console.log("addgames_get, ***********")
-    res.render('addgames');
-}
-
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -44,6 +39,23 @@ const createToken = (id) => {
     });
   };
 
+sendEmail = (content, rspMsg, res) => {
+    let transporter = mailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.GOOGLE_APP_USER,
+            pass: process.env.GOOGLE_APP_PASSWORD
+        }
+    });
+
+    transporter.sendMail(content).then(() => {
+        res.status(201).json({msg: rspMsg});
+    }).catch(error => {
+        res.status(500).json(error); 
+    });
+}
 signup_post = async (req, res) => {
     console.log("xlu post, req.query", req.body);
     //res.send('new signup');
@@ -143,37 +155,18 @@ forgetpassword_post = async (req, res) => {
     }
 }
 
-sendEmail = (content, rspMsg, res) => {
-    let transporter = mailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-            user: process.env.GOOGLE_APP_USER,
-            pass: process.env.GOOGLE_APP_PASSWORD
-        }
-    });
-
-    transporter.sendMail(content).then(() => {
-        res.status(201).json({msg: rspMsg});
-    }).catch(error => {
-        res.status(500).json(error); 
-    });
-}
 resetpassword_post = async (req, res) => {
     console.log("xlu resetpassword_post, req.query", req.body);
     //res.send('new signup');
     let email = req.body.email;
     let password = req.body.password;
     let code = req.body.code;
-    console.log("in controller, email, password, ", email);
-    console.log("post");
-    //res.status(201);
+    //console.log("in controller, email, password, ", email);
     try {
         const user = await User.findUserByEmail(email);
         console.log("******user.code, code: ", user, user.code, code);
         if (user && user.code == code) {
-            console.log("*******resetpassword, user is: ", user);
+            //console.log("*******resetpassword, user is: ", user);
             const result = await User.resetUserPassword(email, password, code);
             if (result) {
                 const token = createToken(email);
@@ -188,33 +181,7 @@ resetpassword_post = async (req, res) => {
       }
     catch(err) {
         //const errors = handleErrors(err);
-        console.log("xlu controller ", err);
-        res.status(400).json({ errors: err.message });
-    }
-}
-
-addgames_post = async (req, res, next) => {
-    console.log("xlu addgames_post, req.query"); //, req.body
-    //res.send('new signup');
-    let name = req.body.name;
-    let description = req.body.description;
-    // let image = req.body.image;
-    let image = req.file.buffer.toString('base64');
-    //console.log("in controller, addgames_post, name, description, image", name, description, image);
-    try {
-        console.log(JSON.stringify(req.file.buffer.toString('base64')));
-        res.locals.result = "You have successfully uploaded a game";
-
-        const result = await pool.query(`insert into games  (name, description, image) VALUES (?, ?, ?)`, [name, description, image]);
-        //console.log("******result: ", result);
-        if (result) {
-            req.flash('success', 'You have successfully added a game');
-            res.redirect('/');
-        } else {
-            throw new Error("Failed to add a game.");
-        }
-      }
-    catch(err) {
+        //console.log("xlu controller ", err);
         res.status(400).json({ errors: err.message });
     }
 }
@@ -229,6 +196,4 @@ module.exports = {
     forgetpassword_post,
     resetpassword_get,
     resetpassword_post,
-    addgames_get,
-    addgames_post
 };

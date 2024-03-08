@@ -22,12 +22,6 @@
         }
 
         window.onload = async (e) => {
-            await getClicks("grapplyBird","grapplyBirdCount");
-            await getClicks("gunSlap","gunSlapCount");
-            await getClicks("grapplingHook","grapplingHookCount");
-            await getClicks("snakeFlyer","snakeFlyerCount");
-            await getClicks("demonPark","demonParkCount");
-
             let username = localStorage.getItem("username");
             if (username && username.trim() !="") {
                 $("#signin").hide();
@@ -39,43 +33,6 @@
                 $("#username").hide();
             }
         }
-
-        async function getClicks(name,id) {
-            console.log("now");
-
-            const data = await fetch("/stats" + "?" + "name="+name, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
-            });
-
-            const resData = await data.json();
-
-            console.log(resData);
-
-            if (resData) {
-                $("#" + id).text(resData['clicks'] + " clicks");
-            }
-        };
-
-        async function addClick(game,id) {
-            const data = await fetch("/stats", {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({type:game})
-
-            });
-
-            const resData = await data.json();
-
-            console.log(resData);
-            document.getElementById(id).textContent = resData['clicks'] + " clicks";
-
-        };
     </script>
 </head>
 
@@ -95,7 +52,6 @@
      </h1>
       <ul>
         <% 
-        // console.log("xlu....., ", user);
         if (user) { %>
           <li>Welcome, <%= user.email %></li>
           <li><a href="/logout">Log out</a></li>
@@ -106,15 +62,13 @@
       </ul>
     </nav>
 
-<% if(messages.success){ %>
-<div class="alert alert-success" role="alert">
-    <%= messages.success %>
+<div id="messages">
+    <% Object.keys(messages).forEach(function (type) { %>
+        <% messages[type].forEach(function (message) { %>
+            <div class="alert alert-<%= type%>">
+            <%= message %>
+            </div>
+        <% }) %>
+    <% }) %>
 </div>
-<% } %>
-
-<% if(messages.error){ %>
-    <div class="alert alert-error" role="alert">
-        <%= messages.error %>
-    </div>
-    <% } %>
 
