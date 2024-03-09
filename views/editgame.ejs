@@ -1,0 +1,20 @@
+<%- include('./partials/header'); -%>
+<div id = "glow"></div>
+<form id="editgameForm" method="post" action="/updateGame" enctype="multipart/form-data">
+    <div id="error" class="errors"></div>
+    <input type="hidden" name="id" value="<%= game.id %>" />
+    <h2>Edit a game</h2>
+    <label for="name">Name</label>
+    <input type="text" name="name" value="<%= game.name %>" required />
+    <label for="description">Description</label>
+    <input type="text" name="description"  value="<%= game.description %>" required />
+    <label for="link" >Link</label>
+    <input type="text" name="link" value="<%= game.link %>" required />
+    <label for="image">Upload an image</label>
+    <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>')">
+
+    <input type="file" name="gameimage" id="image" required/>
+    <button>Save</button>
+  </form>
+
+<%- include('./partials/footer'); -%>
