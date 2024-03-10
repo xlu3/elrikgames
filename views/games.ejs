@@ -1,0 +1,104 @@
+<%- include('./partials/header'); -%>
+    <div id = "glow"></div>
+    <div class="login-logout hide">
+        <button class="viewCount" id="signin">Login</button>
+
+        <span id="username"></span>
+        <button class="viewCount hide" id="signout">Logout</button>
+    </div>
+    
+    <% 
+    if (user && user.role == "admin") { %>
+        <a href = "/addgames" target = "_blank">
+            <button style="margin-left: 20px"> Add a game  </button>
+        </a>
+    <% } %>
+
+    <table class = "gameTable">
+        <tr>
+          <th class = "head">Game Link</th>
+          <th class = "head">Description</th>
+        </tr>
+
+        <% if (games && games.length > 0) { %>
+            <% games.forEach(game => { %>
+                <tr>
+                    <td>
+                        <a href = "<%= game.link %>" target = "_blank">
+                            <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>')">
+                        </a>
+                        
+                    </td>
+                    <td class = "gameText">
+                        <div class = "description"><%= game.description %></div>
+                        <div id="views-count-<%= game.id%>"class = "viewCount"> <%= game.views %> Views </div>
+                    </td>
+                    <td>
+                        <% 
+                        if (user && user.role == "admin") { %>
+                            <a href = "/game?id=<%=game.id%>" target = "_blank">
+                                <button> Edit game  </button>
+                            </a>  
+                            <button onclick="deletegame(event, '<%= game.id %>')"> Delete  </button>
+                        <% } %>
+
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="3">
+                    There are no games available.
+                    
+                </td>
+            </tr>
+        <% } %>
+      </table>
+
+<script>
+    
+    async function addviews(gameid) {
+        const data = await fetch("/gameviews/" + gameid, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const resData = await data.json();
+
+        console.log(resData, resData['views'] + " views");
+        $("#views-count-" + gameid).html(resData['views'] + " views");
+    }; 
+
+    async function deletegame(event, gameid) {
+        var result = confirm("Are you sure you want to delete this game?");
+        if (result) {
+            try {
+                const data = await fetch("/games/" + gameid, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                console.log("response, data, ", data)
+                if (data) {
+                    console.log("before reload");
+                    // $('#messages').load(location.href + " #messages");
+
+                    location.reload();
+                }
+                // const resData = await data.json();
+
+                //console.log(resData, resData['views'] + " views");
+                //$("#views-count-" + gameid).html(resData['views'] + " views");
+            } 
+            catch (err) {
+                console.log("xlu ****************** error out", err);
+            }
+        }
+        
+    }; 
+</script>
+
+<%- include('./partials/footer'); -%>
