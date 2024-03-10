@@ -1,0 +1,34 @@
+<%- include('./partials/header'); -%>
+    <div id = "glow"></div>
+    <!-- <div class="login-logout hide">
+        <button class="viewCount" id="signin">Login</button>
+
+        <span id="username"></span>
+        <button class="viewCount hide" id="signout">Logout</button>
+    </div> -->
+
+    <table class = "gameTable">
+        <tr>
+          <th class = "head">email</th>
+        </tr>
+
+        <% if (users && users.length > 0) { %>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td>
+                        <div class = "gameText"><%= user.email%></div>
+                        
+                    </td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="3">
+                    There are no users available.
+                    
+                </td>
+            </tr>
+        <% } %>
+      </table>
+
+<%- include('./partials/footer'); -%>

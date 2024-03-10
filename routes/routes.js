@@ -3,6 +3,7 @@ const { Router } = require('express');
 
 const authController = require('../controllers/authController');
 const gamesController = require('../controllers/gamesController');
+const usersController = require('../controllers/usersController');
 
 const router = Router();
 const multer = require('multer');
@@ -26,7 +27,7 @@ router.put('/gameviews/:id', gamesController.gameviews_put);
 router.delete('/games/:id', gamesController.games_delete);
 router.get('/game', gamesController.games_edit_get);
 router.post('/updateGame', upload.single('gameimage'), gamesController.updategames_put);
-
+router.get('/users', usersController.get_users);
 
 router.get('/login', (req, res) => {
     res.render('login');
