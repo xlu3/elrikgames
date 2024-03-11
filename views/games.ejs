@@ -64,7 +64,7 @@
                                 <button> View game  </button>
                             </a>  
                             -->
-                            <% if (game.game_role != "admin") { %>
+                            <% if (game.game_role != "admin" && user.id == game.user_id) { %>
                                 
                                 <a href = "/game?id=<%=game.id%>" target = "_blank">
                                     <button> Edit </button>
