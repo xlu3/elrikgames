@@ -74,10 +74,9 @@ form h2{
   }
 .viewCount {
     color: rgb(242, 227, 242);
-    font-size: 2vw;
+    font-size: 1.4vw;
     border: 0.39vw solid black;
     background-color: rgb(41,41,41);
-    border-radius:5vw;
 
     padding: 0.2vw 1.2vw;
     display: inline-block;
@@ -120,24 +119,24 @@ div {
 }
 
 .gameText {
-    font-size: 2vw;
     border: 10px solid black;
     background-color: rgb(41, 41, 41);
-    width: 47vw;    
+    width: 40vw;    
 }
 .description {
     color: rgba(178,178,178,1);
+    font-size: 1.4vw;
 }
 .head {
-    font-size: 40px;
+    font-size: 36px;
     font-style: italic;
 }
 .gameTable {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 4vw;
+    margin-right: 4vw;
 }
 td {
-    padding: 2vw;
+    padding: 0.5vw;
     
 }
 .page {

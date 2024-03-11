@@ -14,12 +14,29 @@ const pool = mysql.createPool({
 
 games_get = async (req, res) => {
     try {        
-        const rows = await pool.query(`select * from games`);
+        const rows = await pool.query(`select * from games where role='admin'`);
         if (rows) {
             res.locals.games = rows[0];
             console.log("******rows: ", rows[0]);
 
             res.render('games');
+        } else {
+            throw new Error("Failed to add a game.");
+        }
+      }
+    catch(err) {
+        res.status(400).json({ errors: err.message });
+    }
+}
+
+community_games_get = async (req, res) => {
+    try {        
+        const rows = await pool.query(`SELECT games.id as id, games.description, games.image, games.name as game_name, link, views, likes, user_id, games.role as game_role, users.name as user_name FROM games join users  where games.role != "admin" or games.role is null group by games.id`);
+        if (rows) {
+            res.locals.games = rows[0];
+            console.log("******rows: ", rows[0]);
+
+            res.render('community');
         } else {
             throw new Error("Failed to add a game.");
         }
@@ -66,6 +83,7 @@ updategames_put = async (req, res) => {
     let name = req.body.name;
     let description = req.body.description;
     let link = req.body.link;
+
     // let image = req.body.image;
     let image = req.file.buffer.toString('base64');
     //console.log("in controller, addgames_post, name, description, image", name, description, image);
@@ -95,6 +113,8 @@ addgames_post = async (req, res, next) => {
     let name = req.body.name;
     let description = req.body.description;
     let link = req.body.link;
+    let user_id = req.body.user_id;
+
     // let image = req.body.image;
     let image = req.file.buffer.toString('base64');
     //console.log("in controller, addgames_post, name, description, image", name, description, image);
@@ -102,7 +122,7 @@ addgames_post = async (req, res, next) => {
         console.log(JSON.stringify(req.file.buffer.toString('base64')));
         res.locals.result = "You have successfully uploaded a game";
 
-        const result = await pool.query(`insert into games  (name, link, description, image) VALUES (?, ?, ?, ?)`, [name, link, description, image]);
+        const result = await pool.query(`insert into games  (name, link, description, image, user_id) VALUES (?, ?, ?, ?, ?)`, [name, link, description, image, user_id]);
         //console.log("******result: ", result);
         if (result) {
             req.flash('success', 'You have successfully added a game');
@@ -118,12 +138,13 @@ addgames_post = async (req, res, next) => {
 
 
 gameviews_put = async (req, res, next) => {
-    console.log("xlu gameviews_put, req.query"); //, req.body
+    console.log("xlu gameviews_put, req.body, ", req.body); //, req.body
     //res.send('new signup');
     
     try {
         let gameid = req.params.id;
-        console.log("in controller, gameviews_put, gameid: ", gameid);
+        let user_id = req.body.user_id;
+        console.log("in controller, gameviews_put, gameid: ", gameid, user_id);
         const results = await pool.query(`select views from games where id=?`, [gameid]);
     
         console.log('db result: , views, ', results, results[0][0].views);
@@ -131,7 +152,9 @@ gameviews_put = async (req, res, next) => {
         if (results) {
             const views = results[0][0].views + 1;
             console.log("new view count: ", views)
-            const result = await pool.query(`update games set views=? where id=?`, [views, gameid]);
+            //const result = await pool.query(`insert into views set game_id=?, user_id=? where id=?`, [gameid, user_id]);
+            //console.log("user_id, gameid", user_id, gameid);
+            const result2 = await pool.query(`insert into views (user_id, game_id) VALUES (?, ?)`, [user_id, gameid]);
     
             res.json({views: views});
         } else {
@@ -172,5 +195,6 @@ module.exports = {
     gameviews_put,
     games_delete,
     games_edit_get,
-    updategames_put
+    updategames_put,
+    community_games_get
 };

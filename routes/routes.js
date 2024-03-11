@@ -20,6 +20,7 @@ router.get('/logout', authController.logout_get);
 
 router.get('/', gamesController.games_get);
 router.get('/games', gamesController.games_get);
+
 router.get('/addgames', gamesController.addgames_get);
 router.post('/addgames', upload.single('gameimage'), gamesController.addgames_post);
 router.put('/gameviews/:id', gamesController.gameviews_put);
@@ -27,6 +28,7 @@ router.delete('/games/:id', gamesController.games_delete);
 router.get('/game', gamesController.games_edit_get);
 router.post('/updateGame', upload.single('gameimage'), gamesController.updategames_put);
 
+router.get('/community', gamesController.community_games_get);
 
 router.get('/login', (req, res) => {
     res.render('login');

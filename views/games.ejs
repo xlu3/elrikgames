@@ -16,16 +16,23 @@
 
     <table class = "gameTable">
         <tr>
+          <th class = "head">Name</th>
           <th class = "head">Game Link</th>
           <th class = "head">Description</th>
         </tr>
-
+        
         <% if (games && games.length > 0) { %>
+            <% JSON.stringify(user) %>
             <% games.forEach(game => { %>
                 <tr>
                     <td>
+                        <div class="description">
+                            <%= game.name %>
+                        </div>
+                    </td>
+                    <td>
                         <a href = "<%= game.link %>" target = "_blank">
-                            <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>')">
+                            <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>', '<%= user && user.id %>')">
                         </a>
                         
                     </td>
@@ -57,9 +64,11 @@
 
 <script>
     
-    async function addviews(gameid) {
+    async function addviews(gameid, user_id) {
+        console.log("user_id: ", user_id);
         const data = await fetch("/gameviews/" + gameid, {
             method: 'PUT',
+            body: JSON.stringify({user_id: user_id}),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -67,8 +76,10 @@
 
         const resData = await data.json();
 
-        console.log(resData, resData['views'] + " views");
-        $("#views-count-" + gameid).html(resData['views'] + " views");
+        console.log(resData);
+        if (resData && resData['views']) {
+            $("#views-count-" + gameid).html(resData['views'] + " views");
+        }
     }; 
 
     async function deletegame(event, gameid) {

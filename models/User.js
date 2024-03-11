@@ -85,7 +85,7 @@ findUserByEmail = async (email) => {
         // todo put all in try catch block
         if (user) {
            // console.log("findUserByEmail, user: ", user)
-           return {email: user.email, code: user.code, role: user.role};
+           return {id: user.id, email: user.email, code: user.code, role: user.role};
         } 
         else {
             throw new Error("Please check your email address");
