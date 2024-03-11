@@ -14,29 +14,12 @@ const pool = mysql.createPool({
 
 games_get = async (req, res) => {
     try {        
-        const rows = await pool.query(`select * from games where role='admin'`);
+        const rows = await pool.query(`SELECT games.id as id, games.description, games.name as game_name, link, views, likes, user_id, games.role as game_role, users.name as user_name, games.image FROM games join users where games.user_id = users.id order by games.id`);
         if (rows) {
             res.locals.games = rows[0];
             console.log("******rows: ", rows[0]);
 
             res.render('games');
-        } else {
-            throw new Error("Failed to add a game.");
-        }
-      }
-    catch(err) {
-        res.status(400).json({ errors: err.message });
-    }
-}
-
-community_games_get = async (req, res) => {
-    try {        
-        const rows = await pool.query(`SELECT games.id as id, games.description, games.image, games.name as game_name, link, views, likes, user_id, games.role as game_role, users.name as user_name FROM games join users  where games.role != "admin" or games.role is null group by games.id`);
-        if (rows) {
-            res.locals.games = rows[0];
-            console.log("******rows: ", rows[0]);
-
-            res.render('community');
         } else {
             throw new Error("Failed to add a game.");
         }
@@ -197,6 +180,5 @@ module.exports = {
     gameviews_put,
     games_delete,
     games_edit_get,
-    updategames_put,
-    community_games_get
+    updategames_put
 };

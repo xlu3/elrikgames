@@ -28,8 +28,6 @@ router.delete('/games/:id', gamesController.games_delete);
 router.get('/game', gamesController.games_edit_get);
 router.post('/updateGame', upload.single('gameimage'), gamesController.updategames_put);
 
-router.get('/community', gamesController.community_games_get);
-
 router.get('/login', (req, res) => {
     res.render('login');
 });

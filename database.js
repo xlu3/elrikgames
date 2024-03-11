@@ -18,13 +18,6 @@ getUser = async function (email) {
     return rows[0];
 }
 
-createUser = async function (email, password) {
-    //console.log("in createUser, ", email, password);
-    const result = await pool.query(`insert into users  (email, password) VALUES (?,  ? )`, [email, password]);
-    console.log(result);
-    return result;
-}
-
 findUser = async function (email) {
     
     const [rows] = await pool.query('select * from users where email = ?', email);
@@ -63,7 +56,6 @@ getDbConnection = async function () {
 
 module.exports = {
     getUser,
-    createUser,
     findUser,
     getStats,
     insertRow,

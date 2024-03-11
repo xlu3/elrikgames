@@ -24,11 +24,14 @@ const encryptPassword = async (password) => {
     return pw;
 };
 //const pw = module.exports.encryptPassword("1234");
-createUser = async (email, password) => {
+createUser = async (email, password, name) => {
     const pw = await encryptPassword(password);
     //console.log("createUser2, password is: ", pw);
     try {
-        const results = await db.createUser(email, pw);
+        // console.log("createUser2, email, pw is: ", email, pw);
+
+        const results = await pool.query(`insert into users  (email, name, password) VALUES (?, ?, ? )`, [email, name, pw]);
+
         console.log('db result1: ', results);
         // todo put all in try catch block
         if (results) {

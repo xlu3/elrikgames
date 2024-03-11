@@ -61,11 +61,12 @@ signup_post = async (req, res) => {
     //res.send('new signup');
     let email = req.body.email;
     let password = req.body.password;
-    console.log("in controller, email, password, ", email, password);
+    let name = req.body.name;
+    console.log("in controller, email, password, name: ", email, password, name);
     console.log("post");
     //res.status(201);
     try {
-        const user = await User.createUser(email, password);
+        const user = await User.createUser(email, password, name);
         const token = createToken(email);
         res.cookie('user', token, { httpOnly: true, maxAge: maxAge * 1000 });
 

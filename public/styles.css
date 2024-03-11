@@ -128,7 +128,8 @@ div {
     font-size: 1.4vw;
 }
 .head {
-    font-size: 36px;
+    color: grey;
+    font-size: 1.5vw;
     font-style: italic;
 }
 .gameTable {
@@ -143,13 +144,10 @@ td {
     background-color: rgba(20,20,20,1);
     color: #d6d6d6;
 }
-.head {
-    color: grey;
-}
 .gameImage {
     border: 10px solid rgb(92, 92, 92);
     border-radius: 100px;
-    width: 20vw;
+    width: 15vw;
     transition: all 1s;
     cursor: none;
     

@@ -6,28 +6,34 @@
         <span id="username"></span>
         <button class="viewCount hide" id="signout">Logout</button>
     </div>
-    
+
     <% 
     if (user && user.role == "admin") { %>
         <a href = "/addgames" target = "_blank">
             <button style="margin-left: 20px"> Add a game  </button>
         </a>
+    <% } else if (user) { %>
+        <a href = "/addgames" target = "_blank">
+            <button style="margin-left: 20px"> Add a game  </button>
+        </a>
     <% } %>
+
 
     <table class = "gameTable">
         <tr>
           <th class = "head">Name</th>
           <th class = "head">Game Link</th>
           <th class = "head">Description</th>
+          <th class = "head">By user</th>
         </tr>
         
         <% if (games && games.length > 0) { %>
-            <% JSON.stringify(user) %>
+            <% JSON.stringify(games) %>
             <% games.forEach(game => { %>
                 <tr>
                     <td>
                         <div class="description">
-                            <%= game.name %>
+                            <%= game.game_name %>
                         </div>
                     </td>
                     <td>
@@ -40,16 +46,34 @@
                         <div class = "description"><%= game.description %></div>
                         <div id="views-count-<%= game.id%>"class = "viewCount"> <%= game.views %> Views </div>
                     </td>
+                    <td class = "description">
+                        <%= game.user_name %>
+                    </td>
                     <td>
                         <% 
                         if (user && user.role == "admin") { %>
                             <a href = "/game?id=<%=game.id%>" target = "_blank">
-                                <button> Edit game  </button>
+                                <button> Edit game </button>
                             </a>  
                             <button onclick="deletegame(event, '<%= game.id %>')"> Delete  </button>
+                        <% } else if (user) { %>
+                            <!--
+                            <a href = "/game?id=<%=game.id%>" target = "_blank">
+                                <button> View game  </button>
+                            </a>  
+                            -->
+                            <% if (game.game_role != "admin") { %>
+                                
+                                <a href = "/game?id=<%=game.id%>" target = "_blank">
+                                    <button> Edit game </button>
+                                </a>  
+                                <button onclick="deletegame(event, '<%= game.id %>')"> Delete  </button>
+                            <% } %>
                         <% } %>
-
                     </td>
+
+
+                    
                 </tr>
             <% }); %>
         <% } else { %>
@@ -65,7 +89,7 @@
 <script>
     
     async function addviews(gameid, user_id) {
-        console.log("user_id: ", user_id);
+        // console.log("user_id: ", user_id);
         const data = await fetch("/gameviews/" + gameid, {
             method: 'PUT',
             body: JSON.stringify({user_id: user_id}),
@@ -94,7 +118,7 @@
                 });
                 console.log("response, data, ", data)
                 if (data) {
-                    console.log("before reload");
+                    // console.log("before reload");
                     // $('#messages').load(location.href + " #messages");
 
                     location.reload();
