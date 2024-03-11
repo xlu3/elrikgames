@@ -1,5 +1,4 @@
 <%- include('./partials/header'); -%>
-    <div id = "glow"></div>
     <div class="login-logout hide">
         <button class="viewCount" id="signin">Login</button>
 
@@ -31,12 +30,12 @@
             <% JSON.stringify(games) %>
             <% games.forEach(game => { %>
                 <tr>
-                    <td>
+                    <td class = "gameText">
                         <div class="description">
                             <%= game.game_name %>
                         </div>
                     </td>
-                    <td>
+                    <td class = "gameText">
                         <a href = "<%= game.link %>" target = "_blank">
                             <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>', '<%= user && user.id %>')">
                         </a>
@@ -46,14 +45,17 @@
                         <div class = "description"><%= game.description %></div>
                         <div id="views-count-<%= game.id%>"class = "viewCount"> <%= game.views %> Views </div>
                     </td>
-                    <td class = "description">
+                    <td class = "gameText description">
                         <%= game.user_name %>
                     </td>
-                    <td>
+                    <td class = "gameText">
+                        <a href = "/game?id=<%=game.id%>" target = "_blank">
+                            <button> View </button>
+                        </a>  
                         <% 
                         if (user && user.role == "admin") { %>
-                            <a href = "/game?id=<%=game.id%>" target = "_blank">
-                                <button> Edit game </button>
+                            <a href = "/gameedit?id=<%=game.id%>" target = "_blank">
+                                <button> Edit </button>
                             </a>  
                             <button onclick="deletegame(event, '<%= game.id %>')"> Delete  </button>
                         <% } else if (user) { %>
@@ -65,7 +67,7 @@
                             <% if (game.game_role != "admin") { %>
                                 
                                 <a href = "/game?id=<%=game.id%>" target = "_blank">
-                                    <button> Edit game </button>
+                                    <button> Edit </button>
                                 </a>  
                                 <button onclick="deletegame(event, '<%= game.id %>')"> Delete  </button>
                             <% } %>

@@ -32,7 +32,30 @@ games_get = async (req, res) => {
 addgames_get = (req, res) => {
     res.render('addgames');
 }
+games_detail_get = async (req, res) => {
+    let gameid = req.query.id;
+    console.log("xlu games_detail_get ************* gameid: ", gameid)
 
+    //res.send('new signup');
+    
+    try {
+        console.log("in controller, games_edit_get, gameid: ", gameid);
+        const result = await pool.query(`select * from games where id=?`, gameid);
+        //const result = await pool.query(`update games set name=?, link=?, description=?, image=? where id=?`, [name, link, description, image, gameid]);
+    
+        console.log('db result:', result);
+        // todo put all in try catch block
+        if (result) {
+            res.locals.game = result[0][0];
+            res.render("gamedetail");
+        } else {
+            throw new Error("Unable to update views count");
+        }
+      }
+    catch(err) {
+        res.status(400).json({ errors: err.message });
+    }
+}
 games_edit_get= async (req, res) => {
     let gameid = req.query.id;
     console.log("xlu************* gameid: ", gameid)
@@ -180,5 +203,6 @@ module.exports = {
     gameviews_put,
     games_delete,
     games_edit_get,
-    updategames_put
+    updategames_put,
+    games_detail_get
 };

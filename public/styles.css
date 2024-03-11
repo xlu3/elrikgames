@@ -55,7 +55,7 @@ form h2{
     color: black;
   }
   button{
-    margin-top: 30px;
+    margin-top: 1vw;
     border-radius: 36px;
     background: #FEE996;
     border:0;
@@ -119,9 +119,8 @@ div {
 }
 
 .gameText {
-    border: 10px solid black;
+    border: 0.2vw solid black;
     background-color: rgb(41, 41, 41);
-    width: 40vw;    
 }
 .description {
     color: rgba(178,178,178,1);
@@ -226,4 +225,10 @@ a:hover .githubLink {
 }
 .success {
     color: green;
+}
+
+.gamedetail {
+    background-color: gray;
+    margin: 1vw;
+    padding: 1vw;
 }
