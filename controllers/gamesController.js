@@ -151,11 +151,13 @@ gameviews_put = async (req, res, next) => {
         // todo put all in try catch block
         if (results) {
             const views = results[0][0].views + 1;
-            console.log("new view count: ", views)
+            console.log("new view count: ", views);
+            const result = await pool.query(`update games set views=? where id=?`, [views, gameid]);
             //const result = await pool.query(`insert into views set game_id=?, user_id=? where id=?`, [gameid, user_id]);
             //console.log("user_id, gameid", user_id, gameid);
-            const result2 = await pool.query(`insert into views (user_id, game_id) VALUES (?, ?)`, [user_id, gameid]);
-    
+            if (user_id) {
+                const result2 = await pool.query(`insert into views (user_id, game_id) VALUES (?, ?)`, [user_id, gameid]);
+            }
             res.json({views: views});
         } else {
             throw new Error("Unable to update views count");
