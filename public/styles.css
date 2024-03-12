@@ -34,7 +34,7 @@ form h2{
     color: black;
   }
   form{
-    width: 360px;
+    min-width: 360px;
     margin: 0 auto;
     padding: 30px;
     box-shadow: 1px 2px 3px rgba(0,0,0,0.1);
@@ -231,4 +231,39 @@ a:hover .githubLink {
     background-color: gray;
     margin: 1vw;
     padding: 1vw;
+    display: flex;
+    flex-direction: row;
 }
+.column {
+    width: 49%;
+}
+.column-spacer {
+    width: 2%;
+}
+#comments {
+    margin-top: 1vw;
+}
+.comment {
+    display: flex;
+    flex-direction: column;
+}
+.comment-user-time {
+    display: flex;
+    flex-direction: row;
+}
+.comment-delete button {
+    margin-top: 0;
+}
+.comment-user {
+    width: 3vw;
+    border-right: 1px solid darkgray;
+}
+.comment-time {
+    margin-right: 1vw;
+    padding-left: 1vw;
+}
+.comment-description {
+    flex: 1;
+
+}
+

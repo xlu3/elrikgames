@@ -34,6 +34,7 @@ addgames_get = (req, res) => {
 }
 games_detail_get = async (req, res) => {
     let gameid = req.query.id;
+    let user_id = req.query.user_id;
     console.log("xlu games_detail_get ************* gameid: ", gameid)
 
     //res.send('new signup');
@@ -46,7 +47,10 @@ games_detail_get = async (req, res) => {
         console.log('db result:', result);
         // todo put all in try catch block
         if (result) {
+            const result2 = await pool.query(`select comments.id, comments.user_id, comments.description, DATE_FORMAT(comments.updated_at, "%Y-%m-%dT%TZ") as updated_at, DATE_FORMAT(comments.created_at, "%Y-%m-%dT%TZ") as created_at, users.name from comments join users where game_id=? and comments.user_id = ? and comments.user_id = users.id order by comments.id desc`, [gameid, user_id]);
             res.locals.game = result[0][0];
+            res.locals.comments = result2[0];
+            console.log("result2 gamedetail comments: ", result2[0]);
             res.render("gamedetail");
         } else {
             throw new Error("Unable to update views count");
@@ -113,6 +117,26 @@ updategames_put = async (req, res) => {
     }
 }
 
+addcomment_post = addgames_post = async (req, res, next) => {
+    console.log("xlu addcomment_post, req.body: ", req.body); //, req.body
+    //res.send('new signup');
+    let user_id = req.body.user_id;
+    let game_id = req.body.game_id;
+    let description = req.body.description;
+
+    try {
+        const result = await pool.query(`insert into comments  (user_id, game_id, description) VALUES (?, ?, ?)`, [user_id, game_id, description]);
+        //console.log("******result: ", result);
+        if (result) {
+            res.status(200).json({ success: "You have successfully added a comment"});
+        } else {
+            throw new Error("Failed to add a comment.");
+        }
+      }
+    catch(err) {
+        res.status(400).json({ errors: err.message });
+    }
+}
 addgames_post = async (req, res, next) => {
     console.log("xlu addgames_post, req.query"); //, req.body
     //res.send('new signup');
@@ -196,6 +220,29 @@ games_delete = async (req, res, next) => {
         res.status(400).json({ errors: err.message });
     }
 }
+
+comment_delete = async (req, res, next) => {
+    // console.log("xlu games_delete, req.query"); //, req.body
+    let commentid = req.params.id;
+
+    // console.log("in controller, gameid", commentid);
+    try {
+        const result = await pool.query(`DELETE FROM comments where id=?`, commentid);
+        if (result) {
+            // console.log("******success result: ", result);
+
+            req.flash('success', 'You have successfully deleted a comment');
+            res.status(200).json({ success: 'You have successfully deleted a comment' });
+        } else {
+            throw new Error("Failed to delete a comment.");
+        }
+      }
+    catch(err) {
+        console.log("err: ", err)
+        res.status(400).json({ errors: err.message });
+    }
+}
+
 module.exports = {
     games_get,
     addgames_get,
@@ -204,5 +251,7 @@ module.exports = {
     games_delete,
     games_edit_get,
     updategames_put,
-    games_detail_get
+    games_detail_get,
+    addcomment_post,
+    comment_delete
 };

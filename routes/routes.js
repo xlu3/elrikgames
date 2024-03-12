@@ -33,6 +33,10 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
+router.post('/addcomment', gamesController.addcomment_post);
+router.delete('/comments/:id', gamesController.comment_delete);
+
+
 // router.get("/firebase/firebaseConfig", (request, response) => {
 //     console.log("in firebase get");
 //     response.sendFile(firebaseConfig);
