@@ -37,7 +37,7 @@
                     </td>
                     <td class = "gameText">
                         <a href = "<%= game.link %>" target = "_blank">
-                            <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game.id %>" class = "gameImage" onclick="addviews('<%= game.id %>', '<%= user && user.id %>')">
+                            <img src="data:image/png;base64, <%= game.image %>" alt="<%= game.name %>" id = "<%= game && game.id %>" class = "gameImage" onclick="addviews('<%= game && game.id %>', '<%= user && user.id %>')">
                         </a>
                         
                     </td>
@@ -49,7 +49,7 @@
                         <%= game.user_name %>
                     </td>
                     <td class = "gameText">
-                        <a href = "/game?id=<%=game.id%>&user_id=<%=user.id%>" target = "_blank">
+                        <a href = "/game?id=<%=game && game.id%>&user_id=<%=user && user.id%>" target = "_blank">
                             <button> View </button>
                         </a>  
                         <% 

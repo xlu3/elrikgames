@@ -47,7 +47,7 @@ games_detail_get = async (req, res) => {
         console.log('db result:', result);
         // todo put all in try catch block
         if (result) {
-            const result2 = await pool.query(`select comments.id, comments.user_id, comments.description, DATE_FORMAT(comments.updated_at, "%Y-%m-%dT%TZ") as updated_at, DATE_FORMAT(comments.created_at, "%Y-%m-%dT%TZ") as created_at, users.name from comments join users where game_id=? and comments.user_id = ? and comments.user_id = users.id order by comments.id desc`, [gameid, user_id]);
+            const result2 = await pool.query(`select comments.id, comments.user_id, comments.description, DATE_FORMAT(comments.updated_at, "%Y-%m-%dT%TZ") as updated_at, DATE_FORMAT(comments.created_at, "%Y-%m-%dT%TZ") as created_at, users.name from comments join users where game_id=? and comments.user_id = users.id order by comments.id desc`, [gameid, user_id]);
             res.locals.game = result[0][0];
             res.locals.comments = result2[0];
             console.log("result2 gamedetail comments: ", result2[0]);
