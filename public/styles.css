@@ -246,24 +246,31 @@ a:hover .githubLink {
 .comment {
     display: flex;
     flex-direction: column;
+    border: 1px solid white;
+    margin-bottom: 0.5vw;
 }
 .comment-user-time {
     display: flex;
     flex-direction: row;
+    border: 1px solid white;
+}
+.comment-delete {
+    padding: 0.5vw;
 }
 .comment-delete button {
     margin-top: 0;
 }
 .comment-user {
-    width: 3vw;
+    min-width: 5vw;
     border-right: 1px solid darkgray;
+    padding: 0.5vw;
 }
 .comment-time {
     margin-right: 1vw;
-    padding-left: 1vw;
+    padding: 0.5vw;
 }
 .comment-description {
     flex: 1;
-
+    padding: 0.5vw;
 }
 

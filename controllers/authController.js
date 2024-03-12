@@ -75,7 +75,7 @@ signup_post = async (req, res) => {
             to: email, // receiver email
             subject: "Elrik Games Sign Up!",
             text: "Thank you for signing up to Elrik's Games: https://elrikgames1.uc.r.appspot.com/",
-            html: "<b>Thank you for signing up to Elrik's Games: <a href='https://www.w3schools.com'>https://elrikgames1.uc.r.appspot.com</a></b>"
+            html: "<b>Thank you for signing up to Elrik's Games: <a href='https://elrikgames1.uc.r.appspot.com'>https://elrikgames1.uc.r.appspot.com</a></b>"
         }
         sendEmail(message, "successfully send the sign in email", res);
       }
